@@ -1,0 +1,32 @@
+Exercise 1.6.  Alyssa P. Hacker doesn't see why if needs to be provided as a special form. ``Why can't I just define it as an ordinary procedure in terms of cond?'' she asks. Alyssa's friend Eva Lu Ator claims this can indeed be done, and she defines a new version of if:
+
+(define (new-if predicate then-clause else-clause)
+  (cond (predicate then-clause)
+        (else else-clause)))
+
+Eva demonstrates the program for Alyssa:
+
+(new-if (= 2 3) 0 5)
+5
+
+(new-if (= 1 1) 0 5)
+0
+
+Delighted, Alyssa uses new-if to rewrite the square-root program:
+
+(define (sqrt-iter guess x)
+  (new-if (good-enough? guess x)
+          guess
+          (sqrt-iter (improve guess x)
+                     x)))
+
+What happens when Alyssa attempts to use this to compute square roots? Explain.
+
+Several things MIGHT happen, not sure which:
+
+1) (new-if (good-enough? guess x) will evaluate using applicative order, so it will be computed as new-if (result of good-enough? on guess x),
+which will not satisfy the argument requirements of new-if.
+
+2) If normal order is used, new-if will be evaluated, and then eventually 
+good-enough? will have to be evaluated. goodEnough? returns x or guess,
+which are both numerical values. If a numerical value > 0 is equivalent to True, and 0 is equivalent to false, goodEnough? will always return True. Thus, the first guess will always be returned.
